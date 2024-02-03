@@ -1,9 +1,12 @@
+import axios from "axios";
+import { atom, useAtom } from "jotai";
 import React, { useEffect } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import Achievements from "./Achievements";
+import Leaderboard from "./Leaderboard";
 import Learn from "./Learn";
-import { atom, useAtom } from "jotai";
-import axios from "axios";
+import Shop from "./Shop";
 
 export const currentUserAtom = atom(null);
 
@@ -29,7 +32,7 @@ const MainPage = () => {
     } catch (error) {
       console.log(error);
       setCurrentUser(null);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -44,6 +47,9 @@ const MainPage = () => {
         <Routes>
           <Route path="/" element={<Outlet />}>
             <Route path="learn" element={<Learn />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="shop" element={<Shop />} />
+            <Route path="achievements" element={<Achievements />} />
           </Route>
         </Routes>
       </div>

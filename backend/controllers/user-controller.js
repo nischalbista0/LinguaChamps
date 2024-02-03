@@ -272,6 +272,9 @@ const updateUserProfile = async (req, res, next) => {
     if (fullname && fullname !== "" && fullname !== user.fullname) {
       user.fullname = fullname;
     }
+    if (age !== undefined ) {
+      user.age = age;
+    }
     if (email && email !== "" && email !== user.email) {
       const existingUserWithEmail = await User.findOne({ email: email });
       if (existingUserWithEmail) {

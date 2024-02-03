@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBookReader } from "react-icons/fa";
-import { MdLeaderboard } from "react-icons/md";
 import { FiMoreHorizontal } from "react-icons/fi";
-import { TbMoodKid } from "react-icons/tb";
+import { MdLeaderboard, MdShop } from "react-icons/md";
 import { PiHandsClapping } from "react-icons/pi";
 
-import { currentUserAtom } from "../pages/MainPage";
 import { useAtom } from "jotai";
-
+import { useNavigate } from "react-router-dom";
+import { currentUserAtom } from "../pages/MainPage";
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState("learn");
   const [currentUser] = useAtom(currentUserAtom);
+  const [avatar, setAvatarUrl] = useState(
+    JSON.parse(localStorage.getItem("selectedAvatar")) || ""
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Update the avatar state when it changes in local storage
+    setAvatarUrl(JSON.parse(localStorage.getItem("selectedAvatar")) || "");
+  }, []);
 
   return (
     <div className="fixed z-20 bg-white dark:bg-black bottom-0 w-full md:bg-black md:w-[280px] md:min-h-[100vh] md:flex md:flex-col md:justify-between md:py-5">
@@ -28,7 +37,10 @@ const Sidebar = () => {
                   ? "text-blue-500 md:text-blue-500"
                   : "text-white"
               }`}
-              onClick={() => setActiveTab("learn")}
+              onClick={() => {
+                navigate("/learn");
+                setActiveTab("learn");
+              }}
             >
               <FaBookReader className="w-5 h-5" />
               <p className="hidden font-semibold md:block">Learn</p>
@@ -40,16 +52,19 @@ const Sidebar = () => {
 
             <li
               className={`relative hover:text-purple-lighter cursor-pointer transition duration-200 ease-linear md:text-white md:flex md:items-center md:gap-3 md:w-full md:px-4 md:py-2.5 md:rounded-md md:hover:bg-dark-bg ${
-                activeTab === "selectCharacters"
+                activeTab === "shop"
                   ? "text-blue-500 md:text-blue-500"
                   : "text-white"
               }`}
-              onClick={() => setActiveTab("selectCharacters")}
+              onClick={() => {
+                navigate("/shop");
+                setActiveTab("shop");
+              }}
             >
-              <TbMoodKid className="w-5 h-5" />
-              <p className="hidden font-semibold md:block">Select Characters</p>
+              <MdShop className="w-5 h-5" />
+              <p className="hidden font-semibold md:block">Shop</p>
 
-              {activeTab === "selectCharacters" && (
+              {activeTab === "shop" && (
                 <div className="md:bg-blue-500 h-full w-[2px] absolute left-0"></div>
               )}
             </li>
@@ -61,6 +76,7 @@ const Sidebar = () => {
                   : "text-white"
               }`}
               onClick={() => {
+                navigate("/leaderboard");
                 setActiveTab("leaderboard");
                 localStorage.setItem("activeTab", "leaderboard");
               }}
@@ -75,19 +91,20 @@ const Sidebar = () => {
 
             <li
               className={`relative hover:text-purple-lighter cursor-pointer transition duration-200 ease-linear md:text-white md:flex md:items-center md:gap-3 md:w-full md:px-4 md:py-2.5 md:rounded-md md:hover:bg-dark-bg ${
-                activeTab === "rewards"
+                activeTab === "achievements"
                   ? "text-blue-500 md:text-blue-500"
                   : "text-white"
               }`}
               onClick={() => {
-                setActiveTab("rewards");
-                localStorage.setItem("activeTab", "rewards");
+                navigate("/achievements");
+                setActiveTab("achievements");
+                localStorage.setItem("activeTab", "achievements");
               }}
             >
               <PiHandsClapping className="w-5 h-5" />
-              <p className="hidden font-semibold md:block">Rewards</p>
+              <p className="hidden font-semibold md:block">Achievements</p>
 
-              {activeTab === "rewards" && (
+              {activeTab === "achievements" && (
                 <div className="md:bg-blue-500 h-full w-[2px] absolute left-0"></div>
               )}
             </li>
@@ -98,14 +115,15 @@ const Sidebar = () => {
       <div
         className="hidden cursor-pointer md:flex justify-between items-center md:px-4 md:py-2 rounded-lg mx-4 transition duration-300 hover:bg-black-75"
         onClick={() => {
-          setActiveTab("profile");
+          navigate("/profile");
         }}
       >
         <div className="flex items-center gap-2 text-white md:text-white">
           <img
             src={
+              avatar.imageUrl ||
               "https://st3.depositphotos.com/9998432/13335/v/600/depositphotos_133352156-stock-illustration-default-placeholder-profile-icon.jpg"
-            }
+            } // Provide a default avatar URL
             alt=""
             className="w-[35px] h-[35px] rounded-full object-fill"
           />
